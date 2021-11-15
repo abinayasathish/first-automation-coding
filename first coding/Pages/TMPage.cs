@@ -9,6 +9,11 @@ namespace first_coding.Pages
 {
     public class TMPage
     {
+        private object editedCode;
+        private object editedTypeCode;
+        private object edited_Code;
+        private object edited_TypeCode;
+
         public void CreateTM(IWebDriver driver)
         {
             // click on CreateNewbutton
@@ -67,49 +72,86 @@ namespace first_coding.Pages
         }
         public void EditTM(IWebDriver driver)
         {
-            IWebElement actual_Code = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
-
-            // Click EditButton
-            IWebElement EditButton = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[2]/td[last()]/a[1]"));
-            EditButton.Click();
-
-            // click on TypeCode dropdown and select time
-            IWebElement tm_Dropdown = driver.FindElement(By.XPath("//*[@id='TimeMaterialEditForm']/div/div[1]/div/span[1]/span/span[2]/span"));
-            tm_Dropdown.Click();
             Thread.Sleep(2000);
 
+            IWebElement findRecordcreated = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
 
-            IWebElement Time_Option = driver.FindElement(By.XPath("//*[@id='TypeCode_listbox']/li[2]"));
-            Time_Option.Click();
+            if (findRecordcreated.Text == "January19")
+            {
 
-            //Clear the existing value of code
-            IWebElement Code_Textbox = driver.FindElement(By.Id("Code"));
-            Code_Textbox.Clear();
+                // Click EditButton
+                IWebElement editButton = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[1]"));
+                editButton.Click();
 
-            //Edit the value of code
-            Code_Textbox.SendKeys("January20");
+                // click on TypeCode dropdown and select time
+                IWebElement tm_Dropdown = driver.FindElement(By.XPath("//*[@id='TimeMaterialEditForm']/div/div[1]/div/span[1]/span/span[2]/span"));
+                tm_Dropdown.Click();
+                Thread.Sleep(2000);
 
-            // Click on Save button
-            IWebElement Save_Button = driver.FindElement(By.Id("SaveButton"));
-            Save_Button.Click();
-            Thread.Sleep(2000);
 
+                IWebElement Time_Option = driver.FindElement(By.XPath("//*[@id='TypeCode_listbox']/li[2]"));
+                Time_Option.Click();
+
+                //Clear the existing value of code
+                IWebElement Code_Textbox = driver.FindElement(By.Id("Code"));
+                Code_Textbox.Clear();
+
+                //Edit the value of code
+                Code_Textbox.SendKeys("January20");
+
+                // Click on Save button
+                IWebElement Save_Button = driver.FindElement(By.Id("SaveButton"));
+                Save_Button.Click();
+                Thread.Sleep(2000);
+
+                // Click on go to last page button
+                IWebElement goToLastPage = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[4]/a[4]/span"));
+                goToLastPage.Click();
+                Thread.Sleep(2000);
+
+                //Assertion
+            }
+            else
+            {
+                Assert.Fail("Record to be edited hasn't found, Record not edited");
+
+            }
 
         }
-
-
         public void DeleteTM(IWebDriver driver)
         {
-            // Delete the Edited Value by clicking Delete Button
-            IWebElement DeleteButton = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[4]/td[last()]/a[2]"));
-            DeleteButton.Click();
             Thread.Sleep(2000);
 
+            IWebElement findEditedRecord = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
 
-            driver.SwitchTo().Alert().Accept();
-            Console.WriteLine("Deleted Item Successfully");
+            if (findEditedRecord.Text == "January20")
+            {
+
+                // Delete the Edited Value by clicking Delete Button
+                IWebElement DeleteButton = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[5]/a[2]"));
+                DeleteButton.Click();
+                Thread.Sleep(2000);
+
+
+                driver.SwitchTo().Alert().Accept();
+
+                //Assert that time record has been deleted
+                IWebElement goToLastPageButton1 = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[4]/a[4]/span"));
+                goToLastPageButton1.Click();
+                Thread.Sleep(2000);
+
+                IWebElement editedCode = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
+                IWebElement editedTypeCode = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[2]"));
+
+                //Asserttion
+                Assert.That(editedCode.Text != "January20", "Code record hasn't been deleted.");
+                Assert.That(editedTypeCode.Text != "M", "TypeCode record hasn't been deleted.");
+            }
+            else
+            {
+                Assert.Fail("Record to be deleted hasn't found, Record not deleted");
+            }
         }
-
     }
 
 
