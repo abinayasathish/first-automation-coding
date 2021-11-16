@@ -22,5 +22,12 @@ namespace first_coding.Pages
             
         }
 
+       
+
+        public void GoToEmployee(IWebDriver driver)
+        {
+            // navigate to employee page
+        }
+
     }
 }

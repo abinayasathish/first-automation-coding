@@ -10,7 +10,7 @@ namespace first_coding.Utilities
 {
     public class CommonDriver
     {
-        public static IWebDriver driver;
+        public IWebDriver driver;
 
         [OneTimeSetUp]
 
@@ -22,10 +22,9 @@ namespace first_coding.Utilities
             LoginPage loginPageObj = new LoginPage();
             loginPageObj.LoginSteps(driver);
 
-            //Home page object initialization and definition
-            HomePage homePageObj = new HomePage();
-            homePageObj.GoToTMpage(driver);
+        
         }
+
         [OneTimeTearDown]
 
         public void CloseTestRun()
